@@ -1,83 +1,13 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
 <head>
-	<title>geo</title>
+	<meta charset="utf-8" />
+	<title>Full the Face</title>
+	<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 </head>
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript">
-function init(){
-if (navigator.geolocation)
-{
-	navigator.geolocation.getCurrentPosition(
-
-		function (position) {
-
-			// var mapCenter = new GLatLng(position.coords.latitude,position.coords.longitude);
-			var mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			var myOptions = {
-			  zoom: 5,
-			  center: mapCenter,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP
-			};
-			// map = new GMap2(document.getElementById("map"));
-			map = new google.maps.Map(document.getElementById("map"), myOptions);
-			// map.setCenter(mapCenter, 15);
-			new google.maps.Marker({
-				position: mapCenter,
-				map: map
-			})
-
-			geocoder = new google.maps.Geocoder();
-			geocoder.geocode({ 'latLng': mapCenter}, function(results, status){
-				if (status == google.maps.GeocoderStatus.OK) {
-			        // if (results[1]) {
-			        //   map.setZoom(11);
-			        //   marker = new google.maps.Marker({
-			        //       position: latlng,
-			        //       map: map
-			        //   });
-			        //   infowindow.setContent(results[1].formatted_address);
-			        //   infowindow.open(map, marker);
-			        results.pop()
-			        r = results.pop()
-			        console.log(r)
-			        alert(r['address_components'][0]['short_name'])
-			        // }
-			    } else {
-			        alert("Geocoder failed due to: " + status);
-			    }
-			})
-
-			// Start up a new reverse geocoder for addresses?
-			// geocoder = new GClientGeocoder();
-			// geocoder.getLocations(latitude+','+longitude, addAddressToMap);
-
-		},
-		// next function is the error callback
-		function (error)
-		{
-			switch(error.code)
-			{
-				case error.TIMEOUT:
-					alert ('Timeout');
-					break;
-				case error.POSITION_UNAVAILABLE:
-					alert ('Position unavailable');
-					break;
-				case error.PERMISSION_DENIED:
-					alert ('Permission denied');
-					break;
-				case error.UNKNOWN_ERROR:
-					alert ('Unknown error');
-					break;
-			}
-		}
-	);
-}
-}
-</script>
-<body onload="init()">
-porra!
-<div id="map" style="width:700px; height:432px; border:1px solid"></div>
+<body>
+	<div id="map" style="width:700px; height:432px; border:1px solid"></div>
+	<script type="text/javascript" src="scripts/jquery.js"></script>
+	<script type="text/javascript" src="scripts/main.js"></script>
 </body>
 </html>
