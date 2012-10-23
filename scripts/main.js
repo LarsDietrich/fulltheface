@@ -4,6 +4,8 @@ var fulltheface = ( function(){
 
 		geolocation: null,
 		bar: null,
+		barLocation: null,
+		map: null,
 
 		fourSquareParams: {
 			url: 'https://api.foursquare.com/v2/venues/search',
@@ -117,47 +119,73 @@ var fulltheface = ( function(){
 
 		showMap: function(){
 
-			var mapCenter = new google.maps.LatLng( this.geolocation.coords.latitude, this.geolocation.coords.longitude )
+			this.geolocation = new google.maps.LatLng( this.geolocation.coords.latitude, this.geolocation.coords.longitude )
 
-			var map = new google.maps.Map( $('#map')[0], {
+			this.map = new google.maps.Map( $('#map')[0], {
 				zoom: 10,
-				center: mapCenter,
+				center: this.geolocation,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			})
 
 			new google.maps.Marker({
-				position: mapCenter,
-				map: map,
+				position: this.geolocation,
+				map: this.map,
 				title: 'Você está aqui'
 			})
 
-			var barLocation = new google.maps.LatLng( this.bar.location.lat, this.bar.location.lng )
+			this.barLocation = new google.maps.LatLng( this.bar.location.lat, this.bar.location.lng )
 
 			var barMarker = new google.maps.Marker({
-				position: barLocation,
+				position: this.barLocation,
 				icon: 'images/marker-duff.png',
-				map: map,
+				map: this.map,
 				title: this.bar.name
 			})
 
 			new google.maps.InfoWindow({
 				content: this.getBarDetails()
-			}).open( map, barMarker )
+			}).open( this.map, barMarker )
 
-			var latMin = Math.min( mapCenter.lat(), barLocation.lat() )
-			var latMax = Math.max( mapCenter.lat(), barLocation.lat() )
-
-			var lngMin = Math.min( mapCenter.lng(), barLocation.lng() )
-			var lngMax = Math.max( mapCenter.lng(), barLocation.lng() )
-
-			map.fitBounds( new google.maps.LatLngBounds(
-				new google.maps.LatLng( latMin, lngMin ),
-				new google.maps.LatLng( latMax, lngMax )
-			) )
+			this.fitMap()
+			// this.setDirections()
 
 			// console.log(this.bar)
 			$('#spinner').fadeOut( 600 )
 			$('#map').show()
+		},
+
+		fitMap: function(){
+
+			var latMin = Math.min( this.geolocation.lat(), this.barLocation.lat() )
+			var latMax = Math.max( this.geolocation.lat(), this.barLocation.lat() )
+
+			var lngMin = Math.min( this.geolocation.lng(), this.barLocation.lng() )
+			var lngMax = Math.max( this.geolocation.lng(), this.barLocation.lng() )
+
+			this.map.fitBounds( new google.maps.LatLngBounds(
+				new google.maps.LatLng( latMin, lngMin ),
+				new google.maps.LatLng( latMax, lngMax )
+			) )
+		},
+
+		setDirections: function(){
+
+			var directionsService = new google.maps.DirectionsService()
+			var directionsDisplay = new google.maps.DirectionsRenderer()
+
+			directionsDisplay.setMap( this.map )
+
+			var request = {
+				origin: this.geolocation,
+				destination: this.barLocation,
+				travelMode: google.maps.TravelMode.WALKING
+			}
+
+			directionsService.route( request, function( result, status ){
+
+				if( status == google.maps.DirectionsStatus.OK )
+					directionsDisplay.setDirections( result )
+			})
 		},
 
 		getBarDetails: function(){
@@ -182,7 +210,7 @@ var fulltheface = ( function(){
 				           '<ul class="info">' +
 				               '<li><span class="">' + this.bar.hereNow.count + '</span> pessoas aqui, <span class="">' + this.bar.likes.count + '</span> likes</li>' +
 				               '<li>' + this.bar.location.address + '</li>' +
-				               '<li class="small">A ' + this.bar.location.distance + ' metros</li>' +
+				               '<li class="small">A ' + this.bar.location.distance + ' metros <a href="#" onclick="fulltheface.setDirections()">Obter direções</a></li>' +
 				           '</ul>' +
 				       '</div>'
 			}

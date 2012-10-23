@@ -120,15 +120,23 @@ body {
 		color: #CCC;
 	}
 
+/*#balloon {
+	display: none;
+}*/
+
 #bar-content {
 	color: black;
 	font-weight: normal;
-	min-width: 250px;
+	min-width: 280px;
+	background: url(../images/poweredby-foursquare.png) no-repeat bottom right;
+	background-size: 80%;
+	padding-bottom: 32px;
 }
 
 	#bar-content .top {
 		min-height: 64px;
 		margin-bottom: 10px;
+		letter-spacing: -1px;
 	}
 
 	#bar-content img {
