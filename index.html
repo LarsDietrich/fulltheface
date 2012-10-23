@@ -3,10 +3,20 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Full the Face</title>
+	<link rel="stylesheet" type="text/css" href="styles/style.css" />
 	<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 </head>
 <body>
-	<div id="map" style="width:700px; height:432px; border:1px solid"></div>
+	<div id="stage">
+		<div id="welcome">
+			<a id="button" href="#">
+				<img src="images/duff.png" />
+				<span>Let's Full the Face</span>
+			</a>
+			<div id="error"></div>
+		</div>
+		<div id="map"></div>
+	</div>
 	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/main.js"></script>
 </body>

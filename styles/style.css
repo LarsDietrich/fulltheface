@@ -1,0 +1,84 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#stage {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	overflow: hidden;
+	margin-top: -216px;
+	margin-left: -350px;
+	width: 700px;
+	height: 432px;
+	background: url(../images/bg.png) no-repeat;
+}
+
+#welcome {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+}
+
+#map {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 200;
+	display: none;
+	width: 100%;
+	height: 100%;
+	/*background: blue;*/
+}
+
+#button {
+	position: absolute;
+	top: 280px;
+	left: 50%;
+	display: inline-block;
+	margin-left: -150px;
+	width: 300px;
+	height: 72px;
+	border: 1px solid #333;
+	border-radius: 10px;
+	background: -webkit-linear-gradient( rgba(50,50,50,0.9), rgba(0,0,0,0.9) );
+	box-shadow: 0px 5px 20px black;
+	color: white;
+	text-decoration: none;
+	font-weight: 100;
+	font-size: 26px;
+	line-height: 72px;
+	-webkit-transition: background-color 1s ease, box-shadow 1s ease;
+}
+
+#button:hover {
+	background-color: black;
+	box-shadow: 0px 5px 20px 2px black;
+}
+
+	#button img {
+		position: relative;
+		top: -18px;
+		left: 13px;
+		float: left;
+	}
+
+	#button span {
+		margin-left: 20px;
+	}
+
+#error {
+	position: absolute;
+	display: none;
+	width: 200px;
+	height: 200px;
+	background: black;
+}

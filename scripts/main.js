@@ -2,13 +2,14 @@ var fulltheface = ( function(){
 
 	var fulltheface = {
 
-		location: null,
+		geolocation: null,
+		bar: null,
 
 		fourSquareParams: {
 			url: 'https://api.foursquare.com/v2/venues/search',
 			latLng: '',
 			categoryId: '4d4b7105d754a06376d81259',
-			radius: '1000',
+			radius: 1000,
 			intent: 'checkin',
 			clientId: 'JARRHCLHU51VHNCIMABLY40NP0JGQWWHY51PXAAZNGB44QTZ',
 			clientSecret: 'CLVMZGZC0WSJSFYE5YR5TEM4PDIUWCLJDMBIVE2WHDGDMKVH',
@@ -18,8 +19,11 @@ var fulltheface = ( function(){
 		init: function(){
 
 			if( navigator.geolocation != undefined ){
-
 				// mostra botao e seta evento
+				$('#button').click( function( event ){
+					event.preventDefault()
+					fulltheface.letsFullTheFace()
+				}).show()
 
 			} else {
 				// seta msgs de erro
@@ -33,8 +37,9 @@ var fulltheface = ( function(){
 
 			navigator.geolocation.getCurrentPosition( function( position ){
 
-				this.location = position
-				this.searchBar()
+				fulltheface.geolocation = position
+				fulltheface.fourSquareParams.latLng = position.coords.latitude +','+ position.coords.longitude
+				fulltheface.searchBar()
 
 			}, function( error ){
 
@@ -56,7 +61,7 @@ var fulltheface = ( function(){
 						break;
 				}
 
-				this.showError( msg )
+				fulltheface.showError( msg )
 			})
 		},
 
@@ -79,18 +84,57 @@ var fulltheface = ( function(){
 				crossDomain: true,
 				success: function( data, status, xhr ){
 
-					console.log( data )
-					this.showMap()
-				},
-				error: function( xhr, status, error ){
+					if( data.meta.code == 200 ){
 
-					this.showError( 'erro: ' + status )
+						var nearest = null
+						var distance = 10 * fulltheface.fourSquareParams.radius
+						var venues = data.response.venues
+
+						for( i = 0; i < venues.length; i++ ){
+							if( venues[ i ].location.distance < distance ){
+								distance = venues[ i ].location.distance
+								nearest = venues[ i ]
+							}
+						}
+
+						fulltheface.bar = nearest
+						fulltheface.showMap()
+
+					} else {
+
+						fulltheface.showError( 'Foursquare está indisponível' )
+					}
+
+				}, error: function( xhr, status, error ){
+
+					fulltheface.showError( 'erro: ' + status )
 				}
 			})
 		},
 
 		showMap: function(){
 
+			var mapCenter = new google.maps.LatLng( this.geolocation.coords.latitude, this.geolocation.coords.longitude )
+
+			var map = new google.maps.Map( $('#map')[0], {
+				zoom: 15,
+				center: mapCenter,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			})
+
+			new google.maps.Marker({
+				position: mapCenter,
+				map: map
+			})
+
+			var barLocation = new google.maps.LatLng( this.bar.location.lat, this.bar.location.lng )
+
+			new google.maps.Marker({
+				position: barLocation,
+				map: map
+			})
+
+			$('#map').show()
 		},
 
 		showError: function( msg ){
@@ -101,43 +145,3 @@ var fulltheface = ( function(){
 	return fulltheface.init()
 
 })()
-
-// var mapCenter = new GLatLng(position.coords.latitude,position.coords.longitude);
-					// var mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-					// var myOptions = {
-					//   zoom: 5,
-					//   center: mapCenter,
-					//   mapTypeId: google.maps.MapTypeId.ROADMAP
-					// };
-					// // map = new GMap2(document.getElementById("map"));
-					// map = new google.maps.Map(document.getElementById("map"), myOptions);
-					// // map.setCenter(mapCenter, 15);
-					// new google.maps.Marker({
-					// 	position: mapCenter,
-					// 	map: map
-					// })
-
-					// geocoder = new google.maps.Geocoder();
-					// geocoder.geocode({ 'latLng': mapCenter}, function(results, status){
-					// 	if (status == google.maps.GeocoderStatus.OK) {
-					//         // if (results[1]) {
-					//         //   map.setZoom(11);
-					//         //   marker = new google.maps.Marker({
-					//         //       position: latlng,
-					//         //       map: map
-					//         //   });
-					//         //   infowindow.setContent(results[1].formatted_address);
-					//         //   infowindow.open(map, marker);
-					//         results.pop()
-					//         r = results.pop()
-					//         console.log(r)
-					//         alert(r['address_components'][0]['short_name'])
-					//         // }
-					//     } else {
-					//         alert("Geocoder failed due to: " + status);
-					//     }
-					// })
-
-					// Start up a new reverse geocoder for addresses?
-					// geocoder = new GClientGeocoder();
-					// geocoder.getLocations(latitude+','+longitude, addAddressToMap);
