@@ -120,7 +120,7 @@ var fulltheface = ( function(){
 			var mapCenter = new google.maps.LatLng( this.geolocation.coords.latitude, this.geolocation.coords.longitude )
 
 			var map = new google.maps.Map( $('#map')[0], {
-				zoom: 15,
+				zoom: 10,
 				center: mapCenter,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			})
@@ -144,8 +144,18 @@ var fulltheface = ( function(){
 				content: this.getBarDetails()
 			}).open( map, barMarker )
 
-			// infowindow.open( map, barMarker )
-			console.log(this.bar)
+			var latMin = Math.min( mapCenter.lat(), barLocation.lat() )
+			var latMax = Math.max( mapCenter.lat(), barLocation.lat() )
+
+			var lngMin = Math.min( mapCenter.lng(), barLocation.lng() )
+			var lngMax = Math.max( mapCenter.lng(), barLocation.lng() )
+
+			map.fitBounds( new google.maps.LatLngBounds(
+				new google.maps.LatLng( latMin, lngMin ),
+				new google.maps.LatLng( latMax, lngMax )
+			) )
+
+			// console.log(this.bar)
 			$('#spinner').fadeOut( 600 )
 			$('#map').show()
 		},
@@ -177,7 +187,7 @@ var fulltheface = ( function(){
 				       '</div>'
 			}
 
-			return 'Sem informações do bar.'
+			return '<div id="bar-content">Sem informações do bar.</div>'
 		},
 
 		showError: function( msg ){
