@@ -119,3 +119,52 @@ body {
 		font-size: 17px;
 		color: #CCC;
 	}
+
+#bar-content {
+	color: black;
+	font-weight: normal;
+	min-width: 250px;
+}
+
+	#bar-content .top {
+		min-height: 64px;
+		margin-bottom: 10px;
+	}
+
+	#bar-content img {
+		float: left;
+		margin-right: 15px;
+		display: inline-block;
+	}
+
+	#bar-content h2 {
+		font-size: 24px;
+		padding-top: 6px;
+		margin-left: 79px;
+	}
+
+	#bar-content h4 {
+		font-size: 16px;
+		color: #999;
+		margin-left: 79px;
+		margin-top: 4px;
+	}
+
+	#bar-content li {
+		font-size: 14px;
+		margin: 3px 0px;
+	}
+
+		#bar-content li span {
+			background: #999;
+			color: white;
+			font-weight: bold;
+			padding: 0px 6px;
+			border-radius: 8px;
+			font-size: 12px;
+		}
+
+	#bar-content li.small {
+		color: #666;
+		font-style: italic;
+	}

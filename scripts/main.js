@@ -36,7 +36,7 @@ var fulltheface = ( function(){
 		letsFullTheFace: function(){
 
 			$('#button').fadeOut( 600 )
-			$('#spinner').show()
+			$('#spinner').fadeIn( 100 )
 
 			navigator.geolocation.getCurrentPosition( function( position ){
 
@@ -70,14 +70,14 @@ var fulltheface = ( function(){
 
 		searchBar: function(){
 
-			url  = this.fourSquareParams.url
-			url += '?ll=' + this.fourSquareParams.latLng
-			url += '&categoryId=' + this.fourSquareParams.categoryId
-			url += '&radius=' + this.fourSquareParams.radius
-			url += '&intent=' + this.fourSquareParams.intent
-			url += '&client_id=' + this.fourSquareParams.clientId
-			url += '&client_secret=' + this.fourSquareParams.clientSecret
-			url += '&v=' + this.fourSquareParams.versioning
+			url = this.fourSquareParams.url +
+			      '?ll=' + this.fourSquareParams.latLng +
+			      '&categoryId=' + this.fourSquareParams.categoryId +
+			      '&radius=' + this.fourSquareParams.radius +
+			      '&intent=' + this.fourSquareParams.intent +
+			      '&client_id=' + this.fourSquareParams.clientId +
+			      '&client_secret=' + this.fourSquareParams.clientSecret +
+			      '&v=' + this.fourSquareParams.versioning
 
 			$.ajax({
 				url: url,
@@ -110,7 +110,7 @@ var fulltheface = ( function(){
 
 				}, error: function( xhr, status, error ){
 
-					fulltheface.showError( 'erro: ' + status )
+					fulltheface.showError( 'Erro: ' + status )
 				}
 			})
 		},
@@ -127,23 +127,63 @@ var fulltheface = ( function(){
 
 			new google.maps.Marker({
 				position: mapCenter,
-				map: map
+				map: map,
+				title: 'Você está aqui'
 			})
 
 			var barLocation = new google.maps.LatLng( this.bar.location.lat, this.bar.location.lng )
 
-			new google.maps.Marker({
+			var barMarker = new google.maps.Marker({
 				position: barLocation,
-				map: map
+				icon: 'images/marker-duff.png',
+				map: map,
+				title: this.bar.name
 			})
 
+			new google.maps.InfoWindow({
+				content: this.getBarDetails()
+			}).open( map, barMarker )
+
+			// infowindow.open( map, barMarker )
+			console.log(this.bar)
 			$('#spinner').fadeOut( 600 )
 			$('#map').show()
 		},
 
+		getBarDetails: function(){
+
+			if( this.bar != null ){
+
+				var categories = []
+
+				for( i = 0; i < this.bar.categories.length; i++ )
+					categories.push( this.bar.categories[ i ].name )
+
+				categories = categories.join( ', ' )
+
+				var iconSrc = this.bar.categories[0].icon.prefix + 'bg_64' + this.bar.categories[0].icon.suffix
+
+				return '<div id="bar-content">' +
+				           '<div class="top">' +
+				               '<img src="' + iconSrc + '" />' +
+				               '<h2>' + this.bar.name + '</h2>' +
+				               '<h4>' + categories + '</h4>' +
+				           '</div>' +
+				           '<ul class="info">' +
+				               '<li><span class="">' + this.bar.hereNow.count + '</span> pessoas aqui, <span class="">' + this.bar.likes.count + '</span> likes</li>' +
+				               '<li>' + this.bar.location.address + '</li>' +
+				               '<li class="small">A ' + this.bar.location.distance + ' metros</li>' +
+				           '</ul>' +
+				       '</div>'
+			}
+
+			return 'Sem informações do bar.'
+		},
+
 		showError: function( msg ){
 
-			$('#error').html( msg ).fadeIn( 'slow' )
+			$('#spinner').fadeOut( 600 )
+			$('#error').html( msg ).fadeIn( 600 )
 		}
 	}
 
