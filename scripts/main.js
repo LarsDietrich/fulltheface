@@ -27,13 +27,16 @@ var fulltheface = ( function(){
 
 			} else {
 				// seta msgs de erro
-				this.showError( 'Sem suporte' )
+				this.showError( 'Seu navegador não tem suporte a Geolocalização =(' )
 			}
 
 			return this
 		},
 
 		letsFullTheFace: function(){
+
+			$('#button').fadeOut( 600 )
+			$('#spinner').show()
 
 			navigator.geolocation.getCurrentPosition( function( position ){
 
@@ -51,17 +54,17 @@ var fulltheface = ( function(){
 						msg = 'Timeout'
 						break;
 					case error.POSITION_UNAVAILABLE:
-						msg = 'Position unavailable'
+						msg = 'Localização indisponível'
 						break;
 					case error.PERMISSION_DENIED:
-						msg = 'Permission denied'
+						msg = 'Permissão negada'
 						break;
 					case error.UNKNOWN_ERROR:
-						msg = 'Unknown error'
+						msg = 'Erro desconhecido'
 						break;
 				}
 
-				fulltheface.showError( msg )
+				fulltheface.showError( 'Erro ao tentar obter geolocalização: '+ msg )
 			})
 		},
 
@@ -134,11 +137,13 @@ var fulltheface = ( function(){
 				map: map
 			})
 
+			$('#spinner').fadeOut( 600 )
 			$('#map').show()
 		},
 
 		showError: function( msg ){
 
+			$('#error').html( msg ).fadeIn( 'slow' )
 		}
 	}
 
